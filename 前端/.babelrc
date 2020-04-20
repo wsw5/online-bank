@@ -1,0 +1,9 @@
+{
+    "presets": ["env","stage-0"],
+    "plugins": ["transform-runtime" , ["component", [
+        {
+          "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+        }
+      ]],"transform-remove-strict-mode"]
+}

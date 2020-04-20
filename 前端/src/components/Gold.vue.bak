@@ -1,0 +1,401 @@
+<template>
+    <div class="container">
+       <div class="header">
+           <el-tabs v-model="activeName" type="card">
+             <el-tab-pane label="银行账户黄金" name="first">
+                <div class="search">
+                    <span> <el-select
+                                v-model="variety"
+                                filterable
+                                remote
+                                clearable
+                                placeholder="请输入品种名称"
+                                :remote-method="remoteMethod"
+                                :loading="loading">
+                                <el-option
+                                v-for="(item,i) in options"
+                                :key="i"
+                                :value="item.variety">
+                                </el-option>
+                            </el-select></span>
+                    <span><el-button type="info" icon="el-icon-search" @click="getBankgold">搜索</el-button></span>
+                </div>
+                <div class="content">
+                      <el-table
+                      :data="this.bankgoldData.slice((currentPage2-1)*pagesize2,currentPage2*pagesize2)"
+                            stripe
+                            :default-sort = "{prop: 'date', order: 'descending'}"
+                            >
+                            <el-table-column
+                                prop="variety"
+                                label="品种"
+				width="300px">
+                                 <template slot-scope="scope">
+                                <div :class="'bg-yellow'">{{scope.row.variety}}</div>           
+                                 </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="midpri"
+                                label="中间价">
+                                 <template slot-scope="scope">
+                                <div :class="'bg-yellow'">{{scope.row.midpri}}</div>           
+                                 </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="buypri"
+                                label="买入价">
+                                 <template slot-scope="scope">
+                                <div :class="'bg-yellow'">{{scope.row.buypri}}</div>           
+                                 </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="sellpri"
+                                label="卖出价">
+                                 <template slot-scope="scope">
+                                <div :class="'bg-yellow'">{{scope.row.sellpri}}</div>           
+                                 </template>
+                            </el-table-column>   
+                             <el-table-column
+                                prop="maxpri"
+                                label="最高价">
+                                 <template slot-scope="scope">
+                                <div :class="'bg-yellow'">{{scope.row.maxpri}}</div>           
+                                 </template>
+                            </el-table-column>   
+                             <el-table-column
+                                prop="minpri"
+                                label="最低价">
+                                 <template slot-scope="scope">
+                                <div :class="'bg-yellow'">{{scope.row.minpri}}</div>           
+                                 </template>
+                            </el-table-column>   
+                             <el-table-column
+                                prop="todayopen"
+                                label="今开盘">
+                                <template slot-scope="scope">
+                                <div :class="'bg-blue'">{{scope.row.todayopen}}</div>           
+                                 </template>
+                            </el-table-column>   
+                             <el-table-column
+                                prop="closeyes"
+                                label="昨收盘">
+                                <template slot-scope="scope">
+                                <div :class="'bg-blue'">{{scope.row.closeyes}}</div>           
+                                 </template>
+                            </el-table-column>
+                             <el-table-column
+                                prop="quantpri"
+                                label="涨跌量">
+                                <template slot-scope="scope">
+                                <div :class="scope.row.quantpri >=0 ? 'bg-red':'bg-green'">{{scope.row.quantpri}}</div>            
+                                </template> 
+                            </el-table-column>
+                             <el-table-column
+                                    prop="handle"
+                                    label="操作">
+                                    <template slot-scope="scope">
+                                    <el-button type="success"  @click="payevent(scope.row)">购买</el-button>
+                                     </template> 
+                            </el-table-column>                            
+                            </el-table>
+                </div>
+                <el-pagination
+                        background
+                        layout="prev, pager, next"
+                        :total="total2"
+                        @current-change="current_change2">
+                    </el-pagination>
+            </el-tab-pane>
+            </el-tabs>
+       </div>
+        <el-dialog title="实时交易" :visible.sync="dialogForm" width="30%">
+            <span class="time">请在 {{ time }} 秒内完成</span>
+                <el-form :model="goldForm" :rules="goldRules"  ref="goldForm">
+                    <el-form-item label="交易品种" :label-width="formLabelWidth" prop="variety" disabled>
+                    <el-input v-model="goldForm.variety" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="交易数量" :label-width="formLabelWidth" prop="many">
+                         <el-input v-model="goldForm.many" autocomplete="off" @input="getmoney"></el-input>
+                    </el-form-item>
+                     <el-form-item label="交易价格" :label-width="formLabelWidth" prop="price" disabled>
+                         <el-input v-model="goldForm.price" autocomplete="off"></el-input>
+                    </el-form-item>
+                     <el-form-item label="交易金额" :label-width="formLabelWidth" prop="money">
+                         <el-input v-model="goldForm.money" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="付款卡号" :label-width="formLabelWidth" prop="creditCard">
+                     <el-select v-model="goldForm.creditCard" placeholder="请选择">
+                        <el-option
+                            v-for="(item,i) in creditCard"
+                            :key="i"
+                            :label="item.label"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                    </el-form-item>
+                     
+                </el-form>
+                 <div slot="footer" class="dialog-footer">
+                          <el-button @click="resetForm('goldForm')">取 消</el-button>
+                        <el-button type="primary" @click="buyGold('goldForm')">确定</el-button>
+                </div>
+               
+        </el-dialog>
+   </div>
+</template>
+<script>
+import axios from 'axios'
+export default {
+    data(){
+        var checkMany=(rule,value,callback)=>{
+            if(value==''){
+                return callback(new Error('买入多少'))
+            }else if(isNaN(Number(value))){
+                return callback(new Error('必须是数字'))
+            }else if(Number(value)<0.01){
+                return callback(new Error('0.01克起购'))
+            }else{
+                callback()
+            }
+        }
+        return{
+            loading:false,
+            time:0,
+            activeName:'first',
+            total2:1000,
+            formLabelWidth:"120px",
+            pagesize2:10,
+            currentPage2:1,
+            variety:'',
+            bankgoldData:[],
+            bankgoldAllData:[],
+            options:[],
+            dialogForm:false,
+            creditCard:[],
+            goldForm:{
+                variety:'',
+                many:'',
+                price:'',
+                money:'',
+                creditCard:''
+            },
+            goldRules:{
+                many:[{ validator: checkMany, trigger: 'blur' }],
+                creditCard:[{ required: true, message: '请选择付款卡号', trigger: 'blur' }],
+            },
+            
+        }
+    },
+    created(){
+        this.getBankgoldData()
+    },
+    methods:{
+        resetForm(goldForm){
+            this.dialogForm=false
+             this.$refs[goldForm].resetFields();
+        },
+        getmoney(){
+            this.goldForm.money=String((Number(this.goldForm.price)*Number(this.goldForm.many)).toFixed(2))
+        },
+        buyGold(goldForm){
+             this.$refs[goldForm].validate((valid) => {
+            if (valid) { 
+                axios.post('/in/buyGold',this.goldForm).then(result=>{
+                     if(result.data[0].code==200){
+                        this.$message({
+                        showClose: true,
+                        message: '购买成功',
+                        type: 'success'
+                        });
+                    }else{
+                            this.$message({
+                            showClose: true,
+                            message: '购买失败',
+                            type: 'error'
+                            });
+                    }
+                },error=>{})
+                this.resetForm('goldForm')
+            }else {
+            console.log('error submit!!');
+            return false;
+          }
+            });
+        },
+        current_change2(currentPage){
+            this.currentPage2=currentPage;
+        },
+        getBankgoldData(){
+            axios.get('/out/finance/gold/bankgold',
+            {params:{key:"6ea1724b1e32d387149e167bcf405ac1"}})
+                    .then(result=>{
+                    console.log(result)
+                        if(result.resultcode==200){
+                             for(var i =1;i>=1;i++){
+                                if(result.result[0][i]==null){
+                                    break;
+                                }
+                                
+                                this.bankgoldAllData.push(result.result[0][i])
+                            }
+                            this.bankgoldData=this.bankgoldAllData
+                            
+                            this.total2=this.bankgoldData.length/this.pagesize2*10;
+                        }
+                   
+                        },error=>{
+                        console.log(error)
+                    })
+        },
+        getBankgold(){
+            if(!this.variety==''){
+                this.bankgoldData=this.bankgoldAllData.filter(item=>{
+                    if(item.variety==this.variety){
+                        return item
+                    }
+                })
+            }else{
+                this.bankgoldData=this.bankgoldAllData
+            }
+        },
+        payevent(row){
+            this.goldForm.variety=row.variety
+            this.goldForm.price=row.buypri
+            this.creditCard=this.$store.state.creditCard
+           
+            this.dialogForm=true
+             this.time= 60;
+            var timeer=setInterval(()=>{
+                this.time--
+                if(this.time==0){
+                    clearInterval(timeer)
+                    this.resetForm('goldForm')
+                }
+            },1000)
+        },
+         remoteMethod(query) {
+            if (query !== '') {
+            this.loading = true;
+                 this.loading = false;
+                this.options = this.bankgoldAllData.filter(item => {
+                    if(item.variety.includes(query)){      
+                        return item
+                    }
+                
+                });
+            } else {
+                 this.options = [];
+            }
+      }
+    }
+}
+</script>
+<style lang="scss" scoped>
+* /deep/ .el-dialog__body {
+    /* padding: 20px; */
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #606266;
+    font-size: 14px;
+    word-break: break-all;
+}
+* /deep/ .el-dialog__title {
+    line-height: 24px;
+    font-size: 20px;
+    color: #303133;
+    font-family:"微软雅黑";
+    margin-left:120px;
+}
+.container{
+    width:100%;
+    height:100%;
+    margin: 0;
+    padding: 0;
+    background-color:rgb(37, 34, 34);
+    .header{
+        padding: 10px;
+        width: 100%;
+        height: 100%;
+        .el-tabs__item {
+            padding: 0 20px;
+            height: 45px;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            line-height: 40px;
+            display: inline-block;
+            list-style: none;
+            font-size: 20px;
+            font-weight: 500;
+            color: #f6f8fa;
+            position: relative;
+        }
+        .el-tabs__item.is-active {
+            color: #409EFF;
+            background-color: rgb(62, 92, 92)
+        }
+        .search{
+        width:400px;
+        height:40px;
+        display: flex;
+        justify-content: space-around;
+    }
+    .content{
+        width: 100%;
+        height: 100%;
+        margin:10px;
+       
+        .el-table td, .el-table th.is-leaf {
+            border-bottom: 1px solid #EBEEF5;
+            background-color: rgb(37, 34, 34);
+    
+        }
+        .el-table__empty-block {
+            min-height: 60px;
+            text-align: center;
+            width: 100%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+             background-color: rgb(37, 34, 34);
+        }
+        .el-table th>.cell {
+            display: inline-block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            position: relative;
+            vertical-align: middle;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100%;
+            color: rgb(253, 236, 236);
+            font-size: 18px;
+            /* font-family: Microsoft YaHei; */
+        }
+        .bg-red{
+            color:red;
+        }
+        .bg-green{
+            color:green;
+        }
+        .bg-yellow{
+            color:	black;
+        }
+        .bg-blue{
+            color:blue;
+        }
+    }
+       
+    }    
+    .time{
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+}
+</style>

@@ -1,0 +1,82 @@
+//1、导入vue-router包
+import VueRouter from 'vue-router'
+//导入store
+import store from './store'
+//导入对应的路由组件
+import Register from './view/filter/register.vue'
+import Login from './view/filter/login.vue'
+import Home from './view/home.vue'
+import Nohome from './view/nohome.vue'
+import Personal from './components/Personal.vue'
+import Invest from './components/Invest.vue'
+import SubHome from './components/SubHome.vue'
+import Communicate from './components/Communicate.vue'
+import Loan from './components/Loan.vue'
+import Account from './components/Account.vue'
+import Fund from './components/Fund.vue'
+import Gold from './components/Gold.vue'
+import PostContent from './components/postContent.vue'
+import ManageMoney from './components/ManageMoney.vue'
+import Content from './components/Contents.vue'
+import Log from './components/log.vue'
+import Contract from './components/Contract.vue'
+//3、创建路由对象
+var router =new VueRouter({
+    routes:[//配置路由规则
+        {path:'/',redirect:'/nohome/login'},
+        {path:'/home',component:Home,
+            children:[
+                {path:'personal',component:Personal,
+                     meta: {
+                    requireAuth: true  // 添加该字段，表示进入这个路由是需要登录的
+                }},
+                {path:'invest', component:Invest,meta:{requireAuth:true},
+                    children:[
+                        {path:'fund',component:Fund,meta:{requireAuth:true}},
+                        {path:'gold',component:Gold,meta:{requireAuth:true}},
+                        {path:'log',component:Log,meta:{requireAuth:true}},
+                        {path:'manageMoney',component:ManageMoney,meta:{requireAuth:true}}
+                    ]
+                },
+                {path:'subHome',component:SubHome,meta:{requireAuth:true}},
+                {path:'communicate' ,component:Communicate,meta:{requireAuth:true},
+                children:[
+                    {path:'postContent',component:PostContent,meta:{requireAuth:true }},
+                    {path:'contents' ,component:Content,meta:{requireAuth:true}},
+                    {path:'contract',component:Contract,meta:{requireAuth:true}}
+                ]
+            },
+                {path:'account',component:Account,meta:{requireAuth:true}},
+                {path:'loan',component:Loan,meta:{requireAuth:true}}
+        ]},
+        {path:'/nohome',component:Nohome,
+            children:[
+                {path:'login',component:Login},
+                {path:'register',component:Register}
+            ]
+        }
+    ],
+    // linkActiveClass:'muactivei-'
+    //覆盖默认的路由高亮的类，默认的类叫做router-link-active
+})
+router.beforeEach((to, from, next) => {
+    if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+         // 登录界面登录成功之后，会把用户信息保存在会话
+  // 存在时间为会话生命周期，页面关闭即失效。
+		console.log(store.state.userName)
+        
+        if (store.state.userName) {  // 通过vuex state获取当前的token是否存在
+            next();
+        }
+        else {
+            next({
+                path: '/nohome/login',
+                query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+            })
+        }
+    }
+    else {
+        next();
+    }
+})
+export default router

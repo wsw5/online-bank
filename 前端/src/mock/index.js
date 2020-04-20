@@ -1,0 +1,400 @@
+// 首先引入Mock
+import Mock from 'mockjs'
+
+// let demoList = [{
+//   "code": 200,
+//   "msg": null,
+//   "data": {
+//     "details": {
+//       "remoteAddress": "0:0:0:0:0:0:0:1",
+//       "sessionId": "6482C029CFC8CC87A028EB88CA0F031E"
+//     },
+//     "authorities": [],
+//     "authenticated": false,
+//     "principal": "张三",
+//     "credentials": "123456",
+//     "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiLlvKDkuIkiLCJleHAiOjE1ODIzODU4MzYsImNyZWF0ZWQiOjE1ODIzNDI2MzYwNjcsImF1dGhvcml0aWVzIjpbXX0.NRH4mcI_NFd1fIGyZiIKn7b_SUXTbUHXdqE1uLP_1E-qxcQ2kH7s_p3Rvvj9SUFAyFuYWu2mPKm5-HXyDPbkxg",
+//     "name": "张三"
+//   }
+// }]
+// let userMessge = [{
+//   "code": 200,
+//   "msg": null,
+//   "data": {
+//     "uId": 1,
+//     "userName": "张三",
+//     "password": "2042bc6bc04a1cdc1020669410bb3a1e",
+//     "salt": "6a1c913c740a4fc6aec2",
+//     "realName": "张三",
+//     "idNumber": "511521199902190028",
+//     "phoneNumber": "15680678102",
+//     "address": "四川宜宾",
+//     "email": "954486422@qq.com",
+//     "age": 30,
+//     "status": 0,
+//     "role": 0,
+//     "emergencyOneName": "李四",
+//     "emergencyOnePhone": "12323432342",
+//     "emergencyOneAddress": "四川宜宾",
+//     "emergencyOneIdNumber": "511521192812012932",
+//     "emergencyTwoName": "王麻子",
+//     "emergencyTwoPhone": "12323434532",
+//     "emergencyTwoAddress": "四川宜宾",
+//     "emergencyTwoIdNumber": "511521198803252421"
+//   }
+// }]
+// let updateUser=[{
+//   "code":200,
+//   "msg":"修改成功"
+// }]
+// let storeCard=[{
+//   "code": 200,
+//   "msg": null,
+//   "data": [{
+//     "id": 1,
+//     "cardNumber": "6347564729723421653",
+//     "userName": "张三",
+//     "money": "33400.0",
+//     "status": 0,
+//     "password": "123456"
+//   },{
+//   "id": 2,
+//   "cardNumber": "6347564729723421643",
+//   "userName": "张三",
+//   "money": "23400.0",
+//   "status": 0,
+//   "password": "123456"}
+// ]
+// }]
+// let manageMoneyProduct=[{
+//   "code": 200,
+//   "msg": null,
+//   "data": [
+//     {
+//       "id": 1,
+//       "manageMoneyName": "网上理财",
+//       "time": "365",
+//       "beginMoney": "4000",
+//       "endTime": 1582128000000,
+//       "rate": "0.045",
+//       "status": 0,
+//       "manageMoneyDeals": null
+//     },
+//     {
+//       "id": 2,
+//       "manageMoneyName": "稳赚理财",
+//       "time": "366",
+//       "beginMoney": "5000",
+//       "endTime": 1583510400000,
+//       "rate": "1.021",
+//       "status": 0,
+//       "manageMoneyDeals": null
+//     },
+//     {
+//       "id": 3,
+//       "manageMoneyName": "风险理财",
+//       "time": "730",
+//       "beginMoney": "6000",
+//       "endTime": 1583510400000,
+//       "rate": "3.301",
+//       "status": 0,
+//       "manageMoneyDeals": null
+//     },
+//     {
+//       "id": 4,
+//       "manageMoneyName": "风向低价",
+//       "time": "232",
+//       "beginMoney": "3243",
+//       "endTime": 1583510412000,
+//       "rate": "0.021",
+//       "status": 0,
+//       "manageMoneyDeals": null
+//     },
+//     {
+//       "id": 5,
+//       "manageMoneyName": "覆盖原产地",
+//       "time": "543",
+//       "beginMoney": "4324",
+//       "endTime": 1583510444000,
+//       "rate": "2.011",
+//       "status": 0,
+//       "manageMoneyDeals": null
+//     },
+//     {
+//       "id": 6,
+//       "manageMoneyName": "理财寄单",
+//       "time": "432",
+//       "beginMoney": "7244",
+//       "endTime": 1583510402000,
+//       "rate": "1.021",
+//       "status": 0,
+//       "manageMoneyDeals": null
+//     }
+//   ]
+// }]
+// let ManageMoneyDeal=[{
+//   "code": 200,
+//   "msg": null,
+//   "data": [
+//     {
+//       "id": 1,
+//       "mId": 1,
+//       "uId": 1,
+//       "money": "3000",
+//       "cardNumber": "6347564729723421653",
+//       "countMoney": "0",
+//       "status": 0
+//     }
+//   ]
+// }]
+// let load=[{
+//   "code": 200,
+//   "msg": null,
+//   "data": [
+//     {
+//       "id": 1,
+//       "uId": 1,
+//       "loadMoney": "6000",
+//       "loadType": "担保贷款",
+//       "status": 0
+//     },
+//     {
+//       "id": 2,
+//       "uId": 1,
+//       "loadMoney": "4345",
+//       "loadType": "委托贷款",
+//       "status": 0
+//     },
+//     {
+//       "id": 3,
+//       "uId": 1,
+//       "loadMoney": "5000",
+//       "loadType": "担保贷款",
+//       "status": 0
+//     }
+//   ]
+// }]
+// let fund=[{
+//   "code": 200,
+//   "msg": null,
+//   "data": [
+//     {
+//       "id": 1,
+//       "code": "00234323",
+//       "fundName": "网上基金",
+//       "rateYear": "0.071",
+//       "currency": 0,
+//       "kind": "开放式基金",
+//       "type": "股票型",
+//       "beginTime": 1582214400000,
+//       "beginMoney": "20",
+//       "fundDayWorth": "2.09",
+//       "worthDate": 1582726654000,
+//       "status": 0
+//     },
+//     {
+//       "id": 2,
+//       "code": "00871234",
+//       "fundName": "稳健基金",
+//       "rateYear": "1.034",
+//       "currency": 0,
+//       "kind": "开放式基金",
+//       "type": "债券型",
+//       "beginTime": 1582819200000,
+//       "beginMoney": "60",
+//       "fundDayWorth": null,
+//       "worthDate": null,
+//       "status": 0
+//     },
+//     {
+//       "id": 3,
+//       "code": "00231232",
+//       "fundName": "只赚基金",
+//       "rateYear": "0.232",
+//       "currency": 0,
+//       "kind": "开放式基金",
+//       "type": "债券基金",
+//       "beginTime": 1582819200000,
+//       "beginMoney": "32",
+//       "fundDayWorth": null,
+//       "worthDate": null,
+//       "status": 0
+//     }
+//   ]
+// }]
+// let credit=[{
+//   "code": 200,
+//   "msg": null,
+//   "data":[{
+//     "id": 1,
+//     "cardNumber": "65456589765678621232",
+//     "uId": 1,
+//     "avaliableCredit": "456567",
+//     "status": 0,
+//     "password": null,
+//     "pays": [
+//       {
+//         "id": 1,
+//         "cId": 1,
+//         "bill": "3434",
+//         "interest": "23.76",
+//         "payday": 1581177600000,
+//         "paied": "40",
+//         "paytotal": "3417.76",
+//         "status": 0
+//       },
+//       {
+//         "id": 2,
+//         "cId": 1,
+//         "bill": "4321",
+//         "interest": "28.85",
+//         "payday": 1581177600000,
+//         "paied": "200",
+//         "paytotal": "4149.85",
+//         "status": 0
+//       }
+//     ]
+//   },{
+//     "id": 2,
+//     "cardNumber": "65456589765678621234",
+//     "uId": 1,
+//     "avaliableCredit": "345423",
+//     "status": 0,
+//     "password": null,
+//     "pays": [
+//       {
+//         "id": 1,
+//         "cId": 2,
+//         "bill": "3434",
+//         "interest": "23.76",
+//         "payday": 1581177600000,
+//         "paied": "40",
+//         "paytotal": "3417.76",
+//         "status": 0
+//       },
+//       {
+//         "id": 2,
+//         "cId": 2,
+//         "bill": "4321",
+//         "interest": "28.85",
+//         "payday": 1581177600000,
+//         "paied": "200",
+//         "paytotal": "4149.85",
+//         "status": 0
+//       }
+//     ]
+//   }]
+// }]
+// let transfer=[{
+//   "code":200,
+//   "msg":"修改成功",
+//   "data":null
+// }]
+// let communicate=[{
+//   "code": 200,
+//   "msg": null,
+//   "data": [
+//     {
+//       "id": 1,
+//       "uId": 1,
+//       "name": "网上银行理财",
+//       "content": "string",
+//       "beginTime": 1582371644000,
+//       "endTime": 1584074611000,
+//       "count": "2",
+//       "status": 0
+//     }
+//   ]
+// }]
+// let report=[{
+//   "code":200,
+//   "msg":"修改成功",
+//   "data":null
+// }]
+// let pay=[{
+//   "code":200,
+//   "msg":"修改成功",
+//   "data":null
+// }]
+// let buyFund=[{
+//   "code":200,
+//   "msg":"购买成功",
+//   "data":null
+// }]
+// let buyGold=[{
+//   "code":200,
+//   "msg":"购买成功",
+//   "data":null
+// }]
+// let buyManageMoneyProduct=[{
+//   "code":200,
+//   "msg":"购买成功",
+//   "data":null
+// }]
+// let imgUpload=[{
+//   "code":200,
+//   "msg":"上传成功",
+//   "data":null,
+//   "url":"http://localhost:8080/src/image/bank2.jpg"
+// }]
+// let postContent=[{
+//   "code":200,
+//   "msg":"发表成功",
+//   "data":null,
+// }]
+// let content=[{
+//   "code": 200,
+//   "msg": null,
+//   "data":{
+//     "userName":"李四",
+//     "role":"平民",
+//     "date":"2020-02-03 02:11:21",
+//     "count":"60",
+//     "title":"关于某某银行在未来三年的发展",
+//     "content":"<p>   所谓“信息银行”，是指利用信息技术来存储、管理、处理、分析和读取用户信息财富的虚拟化云服务。用户除了能像在银行存取现金一样管理自己的数字化信息，还能享受由信息价值再造带来的增值服务。 也就是说，”信息银行”不仅提供信息的存储、读取等基础服务，更能提供对信息的加工处理，统计分析后的价值挖掘和增值再造。</p> <p>     信息就是财富，信息是最宝贵的无形资产，需要像对待金钱一样珍藏，而信息只有通过一点一滴的积累才能收获和保护，也只有通过信息化的手段才能挖掘出最宝贵的价值。</p>",  
+//   }
+//  }]
+// Mock.mock('/in/getContent',content)
+// Mock.mock('/in/postContent',postContent)
+// Mock.mock('/in/imgUpload',imgUpload)
+// Mock.mock('/in/buyManageMoneyProduct',buyManageMoneyProduct)
+// Mock.mock('/in/buyGold',buyGold)
+// Mock.mock('/in/pay',pay)//信用卡还款
+// Mock.mock('/in/report',report)
+
+
+// Mock.mock('/in/findFund',fund)
+// Mock.mock('/in/buyFund',buyFund)
+// Mock.mock('/in/findLoad',load)
+// Mock.mock('/in/findManageMoneyDeal',ManageMoneyDeal)
+// Mock.mock('/in/findManageMoneyProduct',manageMoneyProduct)
+// Mock.mock('/in/findByName',storeCard)
+// Mock.mock('/in/findOne',userMessge)
+// Mock.mock('/in/login',demoList)
+// Mock.mock('/in/update',updateUser)
+// Mock.mock('/in/trasfer',transfer)
+
+// Mock.mock('/in/communicate/findCommunicate',communicate)//查找所有文章,get
+// Mock.mock('/in/communicate/saveCommunicate')//发表文章,post,communicateUser
+// Mock.mock('/in/communicate/updateCommunicate')//更新点击次数,put,communicateUser
+// Mock.mock('/in/credit/findCredit',credit)//查找信用卡,get,userName
+// Mock.mock('/in/credit/report')//信用卡挂失,put,report
+// Mock.mock('/in/credit/pay')//还款，put,payBill
+// Mock.mock('/in/fund/findFund')//查找基金产品，get
+// Mock.mock('/in/fund/saveFund')//申购基金，post,FundDeal
+// //Mock.mock('/in/fund/saveRedeem')//赎回基金申请，post,Redeem
+// Mock.mock('/in/image/upload')//图片上传，post,MultipartFile
+// //Mock.mock('/in/load/findLoad')//查找贷款，get
+// //Mock,mock('/in/load/saveLoad')//申请贷款，post,LoadRegister
+// //Mock.mock('/in/login')//登录，post,loginUser
+// Mock.mock('/in/manageMoney/findManageMoneyProduct')//查找理财产品，get
+// Mock.mock('/in/manageMoney/buyManage')//购买基金产品,post,ManageMoneyRegister
+// //Mock.mock('/in/manageMoney/findManageDeal')//查找购买理财账单，get,id
+// //Mock.mock('/in/register')//注册，post
+// //Mock.mock('/in/sendCode')//发送验证码,get
+// Mock.mock('/in/store/findByName')//查找储蓄卡,get,userName
+// Mock.mock('/in/store/transfer')//转账，put,Transfer
+// Mock.mock('/in/store/report')//储蓄卡挂失,put,report
+// Mock.mock('/in/user/findOne')//查找用户信息,get,userName
+// Mock.mock('/in/user/updateUser')//修改用户信息,put,User
+export default Mock

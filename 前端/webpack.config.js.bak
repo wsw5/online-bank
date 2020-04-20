@@ -1,0 +1,97 @@
+//由于webpack是基于node进行构建的，所有的webpack配置文件中，任何的node.js代码都支持
+var path=require('path')
+
+//启用热更新的第二步
+const webpack=require('webpack')
+
+//在内存中，根据指定的模板页面，生成一份内存中的首页，同时自动把打包好的bundle.js注入到压面底部
+//如果要配置插件，需要在导出的对象中，挂载一个plugins节点
+var htmlWebpackPlugin=require('html-webpack-plugin')
+
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+
+//当以命令行形式运行webpack或webpack-dev-server的时候，工具会发现，并没有发现提供的入口和出口文件
+//此时会检查根目录中的配置文件，并读取这个文件，就拿到导出的这个对象
+module.exports={
+    entry:path.join(__dirname,'./src/main.js'),
+    output:{
+        path:path.join(__dirname,'/dist'),
+        filename:'bundle.js'
+    },
+    
+    devServer:{
+        hot:true,
+        proxy:{
+            '/out':{
+                target:'http://web.juhe.cn:8080/',
+                changeOrigin:true,
+                pathRewrite:{
+                    '^/out':''
+                }
+            },
+            '/in':{
+                target:'http://localhost:8082/',
+                changeOrigin:true,
+                pathRewrite:{
+                    '^/in':''
+                }
+            }
+        },
+        
+    },
+    plugins:[
+        new webpack.HotModuleReplacementPlugin(),//new 一个热更新的模块对象这是启用热更新第三步
+        new htmlWebpackPlugin({
+            //指定模板路径
+            template:path.join(__dirname,'./src/index.html'),
+            filename:'index.html'
+        }),
+        new VueLoaderPlugin()
+    ],
+    module:{//配置所有第三方规则
+        rules:[//第三方匹配规则
+            {
+                test:/\.css$/,use:['style-loader','css-loader']
+            },
+             //这是配置处理less第三方Loader规则
+             {
+                test:/\.less$/,use:['style-loader','css-loader','less-loader']
+            },
+            //这是配置处理scss第三方loader规则
+            {
+                test:/\.scss$/,use:['style-loader','css-loader','sass-loader']
+            },
+            //处理图片路径的loader
+            // {
+            //     test:/\.(jpg|png|gif|bmp|jpeg)$/,loader:'url-loader?limit=14378&name=[hash:8]-[name].[ext]'
+            // },
+            {
+                test:/\.(jpg|png|gif|bmp|jpeg)$/,loader:'url-loader?limit=66419&name=[hash:8]-[name].[ext]',options:{esModule: false}
+            },
+            //limit给定的值是图片的大小，单位是byte，如果引用图片大于或等于给定的Limit值
+            //则不会转为base64格式的字符串，如果图片小于给定的Limit值，则会被转为base64
+
+            //处理字体文件的loader,会提示你ttf没用loader加载
+            {
+                test:/\.(ttf|svg|woff|woff2|eot)$/,use:'url-loader'
+            },
+            //配置Babel来转换高级es语法
+            {
+                test:/\.js$/,use:'babel-loader',exclude:/node_modules/
+            },
+            //这是配置vue组件
+            {
+                test:/\.vue$/,use:'vue-loader'
+            }
+        ],
+        
+
+    },
+    resolve:{
+        alias:{//设置vue被导入时候包的路径
+            // "vue$":"vue/dist/vue.js"
+        }
+    }
+
+}

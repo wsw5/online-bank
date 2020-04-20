@@ -1,0 +1,34 @@
+{
+   "newList":[
+       {"content":"外面野餐","date":"发表时间：2012-12-12 12:12:12","time":"10","url":"src/image/love.jpg"},
+       {"content":"自拍照","date":"发表时间：2013-01-12 12:30:12","time":"50","url":"src/image/timg.jpg"},
+       {"content":"一起拍广告","date":"发表时间：2020-01-01 12:12:12","time":"100","url":"src/image/tt.jpg"}
+   ],
+   
+   "photo":[
+       {"cateid":0,"photos":[{"id":1,"title":"love","img_url":"/src/image/timg.jpg","zhaiyao":"有爱的戳爷与布布，会一直这样幸福下去"},
+        {"id":2,"title":"campping","img_url":"/src/image/love.jpg","zhaiyao":"这一天他们去郊外野餐，抛开工作，享受自然"},
+        {"id":3,"title":"advertise","img_url":"/src/image/tt.jpg","zhaiyao":"一起拍mac的广告，很是性感!"},
+        {"id":4,"title":"paint","img_url":"/src/image/troye.jpg","zhaiyao":"这是粉丝给他们画的漫画，满满爱意"}]},
+        {
+            "cateid":1,"photos":[{"id":1,"title":"love","img_url":"/src/image/timg.jpg","zhaiyao":"有爱的戳爷与布布，会一直这样幸福下去"}]
+        },{
+            "cateid":2,"photos":[{"id":2,"title":"campping","img_url":"/src/image/love.jpg","zhaiyao":"这一天他们去郊外野餐，抛开工作，享受自然"}]
+        },
+        {
+            "cateid":3,"photos":[{"id":3,"title":"advertise","img_url":"/src/image/tt.jpg","zhaiyao":"一起拍mac的广告，很是性感!"}]
+        },
+        {
+            "cateid":4,"photos":[{"id":4,"title":"paint","img_url":"/src/image/troye.jpg","zhaiyao":"这是粉丝给他们画的漫画，满满爱意"}]
+        }
+      
+   ],
+   "title":[
+       {"id":0,"title":"全部"},
+       {"id":1,"title":"分类一"},
+       {"id":2,"title":"分类二"},
+       {"id":3,"title":"分类三"},
+       {"id":4,"title":"分类四"},
+       {"id":5,"title":"分类五"}
+   ]
+}
