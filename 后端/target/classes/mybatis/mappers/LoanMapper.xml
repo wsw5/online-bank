@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cs.online_bank.admin.dao.LoanMapper">
+	<resultMap type="Loan" id="loanById">
+		<id property="id" column="id"/>
+		<result property="uId" column="u_id"/>
+		<result property="money" column="money"/>
+		<result property="payType" column="pay_type"/>
+		<result property="loanType" column="loan_type"/>
+		<result property="use" column="use"/>
+		<result property="payLimit" column="pay_limit"/>
+		<result property="loanDate" column="loan_date"/>
+		<result property="whetherLoan" column="whether_loan"/>
+		<result property="whetherPay" column="whether_pay"/>
+		<result property="loanAmount" column="loan_amount"/>
+		<result property="whetherProve" column="whether_prove"/>
+		<result property="status" column="status"/>
+		<result property="reason" column="reason"/>
+		<association property="user" javaType="User">
+			<id property="uId" column="u_id"/>
+			<result property="realName" column="real_name"/>
+			<result property="phoneNumber" column="phone_number"/>
+		</association>
+		<association property="loanProve" javaType="LoanProve">
+			<id property="id" column="id"/>
+			<result property="prove" column="prove"/>
+		</association>
+	</resultMap>
+	<select id="findLoanById" parameterType="int" resultMap="loanById">
+		select * from loan a left join user b on a.manager_id=b.u_id left join loan_prove c on a.id=c.b_id where a.u_id=#{id}
+	</select>
+	<select id="findLoanAll" resultType="map">
+		select a.*,
+		b.user_name,b.real_name,b.id_number,b.phone_number as user_phone,
+		c.user_name as manager_name,c.real_name as manager_real,c.phone_number as manager_number 
+		d.prove
+		from loan a 
+		left join user b on a.u_id=b.u_id 
+		left JOIN user c on a.manager_id=c.u_id 
+		left join prove d on a.id=c.b_id
+	</select>
+	<insert id="saveLoan" parameterType="LoanRegister">
+		insert into loan(u_id,money,pay_type,loan_type,use,pay_limit,loan_amount) values(#{uId},#{money},#{payType},#{loanType},#{use},#{payLimit},#{loanAmount}))
+	</insert>
+	<update id="updateLoan" parameterType="Loan">
+		update loan <set>
+			<if test="whetherLoan!=null and whetherLoan!=''">
+				whether_loan=#{whetherLoan}
+			</if>
+			<if test="whetherPay!=null and whetherPay!=''">
+				whether_pay=#{whetherPay}
+			</if>
+			<if test="money!=null and money!=''">
+				money=#{money}
+			</if>
+			<if test="loanType!=null and loanType!=''">
+				loan_type=#{loanType}
+			</if>
+			<if test="payType!=null and payType!=''">
+				pay_type=#{payType}
+			</if>
+			<if test="pay_limit!=null and pay_limit!=''">
+				pay_limit=#{payLimit}
+			</if>
+			<if test="loanDate!=null and loanDate!=''">
+				loan_date=#{loanDate}
+			</if>
+			<if test="loanAmount!=null and loanAmount!=''">
+				loan_amount=#{loanAmount}
+			</if>
+			<if test="use!=null and use!=''">
+				use=#{use}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<insert id="saveProve" parameterType="LoanProve">
+		insert into loan_prove(b_id,prove) values(#{bId},#{prove})
+	</insert>
+</mapper>

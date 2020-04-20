@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- 开启驼峰规则自动映射字段属性值；如字段为user_name的可以映射到userName属性中 -->
+<settings>
+	<setting name="mapUnderscoreToCamelCase" value="true"/>
+</settings>
+</configuration>

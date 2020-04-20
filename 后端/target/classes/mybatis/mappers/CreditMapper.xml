@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cs.online_bank.admin.dao.CreditMapper">
+	<resultMap type="CreditUser" id="creditBillMap">
+		<id property="id" column="id"></id>
+		<result property="cardNumber" column="card_number"/>
+		<result property="avaliableCredit" column="avaliable_credit"/>
+		<result property="status" column="status"/>
+		<collection property="pays" javaType="list" ofType="Pay">
+			<id property="id" column="bid"/>
+			<result property="bill" column="bill"/>
+			<result property="interest" column="interest"/>
+			<result property="payday" column="payday"/>
+			<result property="paied" column="paied"/>
+			<result property="paytotal" column="paytotal"/>
+			<result property="status" column="status"/>
+		</collection>
+	</resultMap>
+	<select id="findByName" parameterType="string" resultMap="creditBillMap">
+		select 
+		a.id,
+		a.card_number,
+		a.avaliable_credit,
+		a.status,
+		c.id bid,
+		c.bill,
+		c.interest,
+		c.payday,
+		c.paied,
+		c.paytotal,
+		c.status
+		from credit a,user b,credit_bill c where b.u_id=a.u_id and a.id=c.cid and b.user_name=#{userName}
+	</select>
+	<select id="findMessage" parameterType="string" resultType="map">
+		select 
+			b.id_number as idNumber,
+			b.real_name as realName,
+			a.password as password
+		 from credit a,user b where a.u_id=b.u_id and a.card_number=#{cardNumber}
+	</select>
+	<update id="updateReport" parameterType="CreditUser">
+		update credit <set>
+			<if test="status!=null and status!=''">
+				status=#{status},
+			</if>
+			<if test="password!=null and password">
+				password=#{password}
+			</if>
+		</set>
+		where card_number=#{cardNumber}
+	</update>
+	<select id="findById" parameterType="int" resultType="pay">
+		select * from credit_bill where id=#{id}
+	</select>
+	<update id="update" parameterType="pay">
+		update credit_bill <set>
+			<if test="status!=null and status!=''">
+				status=#{status},
+			</if>
+			<if test="paied!=null and paied!=''">
+				paied=#{paied},
+			</if>
+			<if test="paytotal!=null and paytotal!=''">
+				paytotal=#{paytotal},
+			</if>
+			<if test="interest!=null and interest!=''">
+				interest=#{interest}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="findAll" resultType="Pay">
+		select * from credit_bill where status=0
+	</select>
+</mapper>

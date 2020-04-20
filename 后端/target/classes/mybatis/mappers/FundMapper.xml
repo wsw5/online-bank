@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cs.online_bank.admin.dao.FundMapper">
+	<select id="findAll" resultType="FundProduct">
+		select * from fund
+	</select>
+	
+	<insert id="saveFund" parameterType="FundDeal">
+		insert into fund_deal(f_id,u_id,fund_day_worth,all_money,subscription_rate,date,card_number,share) 
+		values(#{fId},#{uId},#{fundDayWorth},#{allMoney},#{subscriptionRate},#{date},#{cardNumber},#{share})
+	</insert>
+	
+	<insert id="saveFundDayWorth" parameterType="FundDayWorth">
+		insert into fund_day_worth(f_id,net_worth,date) values(#{fId},#{netWorth},#{date})
+	</insert>
+	
+	<update id="updateFundProduct" parameterType="FundProduct"> 
+		update fund set
+				share=#{share},
+				share_date=#{shareDate}
+		where id=#{id}
+	</update>
+	<select id="findFundDeal" resultType="FundDeal">
+		select * from fund_deal where share=0
+	</select>
+	
+	<select id="findRedeem" parameterType="Redeem">
+		select * from redeem where status=0
+	</select>
+	<insert id="saveRedeem" parameterType="Redeem">
+		insert into redeem (p_id,share,date) values(pId,share,date)
+	</insert>
+	
+	<select id="findFundDealById" parameterType="int" resultType="fundDeal">
+		select * from fund_deal where id=#{id}
+	</select>
+	<select id="findRedeemtranfer" parameterType="Redeem">
+		select * from redeem where status=1
+	</select>
+	
+</mapper>

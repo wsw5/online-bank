@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cs.online_bank.admin.dao.CommunicateMapper">
+<resultMap type="Communicate" id="getCommunicate">
+	<id property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="userName" column="user_name"/>
+	<result property="imageUrl" column="image_url"/>
+	<result property="content" column="content"/>
+	<result property="beginTime" column="begin_time"/>
+	<result property="endTime" column="end_time"/>
+	<result property="count" column="count"/>
+	<result property="status" column="status"/>
+</resultMap>
+	<select id="findCommunicate" resultMap="getCommunicate">
+		select a.id,a.name,a.image_url,a.content,a.begin_time,a.end_time,a.count,a.status,b.user_name from communicate a,user b where a.u_id=b.u_id and a.status=0
+	</select>
+	
+	<insert id="saveCommunicate" parameterType="CommunicateUser" >
+		insert into communicate (u_id,name,image_url,content,begin_time,end_time,status,count) values(#{uId},#{name},#{imageUrl},#{content},#{beginTime},#{endTime},#{status},#{count})
+	</insert>
+	
+	<update id="updateCommunicate" parameterType="CommunicateUser">
+		update communicate 
+		<set>
+			<if test="status!=null and status!=''">
+				status=#{status}
+			</if>
+			<if test="count!=null and count!=''">
+				count=#{count}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

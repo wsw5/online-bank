@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cs.online_bank.admin.dao.UserMapper">
+	<insert id="save" parameterType="User">
+		insert into user(user_name,
+		password,
+		real_name,
+		id_number,
+		phone_number,
+		address,
+		email,
+		age,
+		salt,
+		status,
+		emergency_one_name,
+		emergency_one_phone,
+		emergency_two_name,
+		emergency_two_phone) 
+		values(#{userName},#{password},#{realName},#{idNumber},#{phoneNumber},#{address},#{email},#{age},#{salt},#{status},#{emergencyOneName},#{emergencyOnePhone},#{emergencyTwoName},#{emergencyTwoPhone})
+		
+	</insert>
+	
+	<select id="findByName" parameterType="string" resultType="User">
+		select * from user where user_name=#{userName}
+	</select>
+	<select id="findAll" resultType="User">
+		select * from user
+	</select>
+	<update id="updateUser" parameterType="User">
+		update user <set>
+			<if test="user_name!=null and user_name!=''">
+				user_name=#{userName}
+			</if>
+			<if test="password!=null and password!=''">
+				password=#{password}
+			</if>
+			<if test="phone_number!=null and phone_number!=''">
+				phone_number=#{phoneNumber}
+			</if>
+			<if test="address!=null and address!=''">
+				address=#{address}
+			</if>
+			<if test="email!=null and email!=''">
+				address=#{email}
+			</if>
+			<if test="age!==null and age!=''">
+				age=#{age}
+			</if>
+			<if test="salt!=null and salt!=''">
+				salt=#{salt}
+			</if>
+			<if test="emergency_one_name!=null and emergency_one_name!=''">
+				emergency_one_name=#{emergency_one_name}
+			</if>
+			<if test="emergency_one_phone!=null and emergency_one_phone!=''">
+				emergency_one_phone=#{emergency_one_phone}
+			</if>
+			<if test="emergency_one_address!=null and emergency_one_address!=''">
+				emergency_one_address=#{emergency_one_address}
+			</if>
+			<if test="emergency_one_id_number!=null and emergency_one_id_number!=''">
+				emergency_one_id_number=#{emergency_one_id_number}
+			</if>
+			<if test="emergency_two_name!=null and emergency_two_name!=''">
+				emergency_two_name=#{emergency_two_name}
+			</if>
+			<if test="emergency_two_phone!=null and emergency_two_phone!=''">
+				emergency_two_phone=#{emergency_two_phone}
+			</if>
+			<if test="emergency_two_address!=null and emergency_two_address!=''">
+				emergency_two_address=#{emergency_two_address}
+			</if>
+			<if test="emergency_two_id_number!=null and emergency_two_id_number!=''">
+				emergency_two_id_number=#{emergency_two_id_number}
+			</if>
+		</set>
+		where u_id=#{uId}
+	</update>
+	<!-- <select id="getPermission" parameterType="string" resultType="set">
+		select grant_key from user a,role_resource b, resource c where a.user_name=#{userName} and a.role=b.id and b.r_id=c.id
+	</select> -->
+	<select id="findById" parameterType="int" resultType="User">
+		select * from user where id=#{id}
+	</select>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cs.online_bank.admin.dao.StoreMapper">
+	<select id="findByName" parameterType="string" resultType="StoreCard">
+		select * from store where user_name = #{userName}
+	</select>
+	
+	<select id="findMessage" parameterType="string" resultType="map">
+		SELECT a.real_name as realName,a.id_number as idNumber,b.password as password,b.money as money,b.status as status FROM `user` a,store b 
+		WHERE a.user_name=b.user_name
+		and b.card_number=#{cardNumber}
+	</select>
+	
+	<update id="update" parameterType="StoreCard">
+		UPDATE store  <set>
+		<if test="status!=null and status!=''">
+			status=#{status},
+		</if>
+		<if test="money!=null and money!=''">
+			money=#{money},
+		</if>
+		<if test="password!=null and password!=''">
+			password=#{password},
+		</if>
+		</set> 
+		WHERE card_number=#{cardNumber}
+	</update>
+	
+	
+	
+
+</mapper>
